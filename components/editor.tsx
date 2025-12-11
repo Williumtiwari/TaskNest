@@ -6,11 +6,10 @@ import {
   PartialBlock
 } from "@blocknote/core";
 import {
-  BlockNoteView,
-  useBlockNote
+  BlockNoteViewRaw,
+  useCreateBlockNote
 } from "@blocknote/react";
 import "@blocknote/core/style.css";
-import "@blocknote/react/style.css";
 
 import { useEdgeStore } from "@/lib/edgestore";
 
@@ -36,21 +35,28 @@ const Editor = ({
     return response.url;
   }
 
-  const editor: BlockNoteEditor = useBlockNote({
+  interface EditorConfig {
+    editable?: boolean;
+    initialContent?: PartialBlock[];
+    onEditorContentChange: (editor: BlockNoteEditor) => void;
+    uploadFile: (file: File) => Promise<string>;
+  }
+
+  const editor: BlockNoteEditor = useCreateBlockNote({
     editable,
     initialContent: 
       initialContent 
       ? JSON.parse(initialContent) as PartialBlock[] 
       : undefined,
-    onEditorContentChange: (editor) => {
+    onEditorContentChange: (editor: BlockNoteEditor) => {
       onChange(JSON.stringify(editor.topLevelBlocks, null, 2));
     },
-    uploadFile: handleUpload
-  })
+    uploadFile: handleUpload as EditorConfig["uploadFile"]
+  });
 
   return (
     <div>
-      <BlockNoteView
+      <BlockNoteViewRaw
         editor={editor}
         theme={resolvedTheme === "dark" ? "dark" : "light"}
       />
