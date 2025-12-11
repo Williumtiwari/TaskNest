@@ -10,6 +10,7 @@ import {
   useBlockNote
 } from "@blocknote/react";
 import "@blocknote/core/style.css";
+import "@blocknote/react/style.css";
 
 import { useEdgeStore } from "@/lib/edgestore";
 
